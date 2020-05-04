@@ -26,11 +26,19 @@ df = pd.read_excel(f)
 
 df.to_excel(book_list_path)
 
+def get_value(book, col):
+    value = book[col].values
+    assert len(value) == 1, "too many values"
+    return value[0]
+
 def get_subject(book, subject_column):
-    return book[subject_column].values[0]
+    return get_value(book, subject_column)
 
 def get_title(book, title_column):
-    return book[title_column].values[0]
+    return get_value(book, title_column)
+
+def get_url(book, url_column):
+    return get_value(book, url_column)
 
 def normalize(txt):
     return re.sub(
@@ -51,4 +59,6 @@ subject = get_subject(book, book_subject_column)
 mkdir(downloads_base_dir, normalize(subject))
 
 title = get_title(book, book_title_column)
-print(title)
+
+book_url = get_url(book, book_url_column)
+print(book_url)

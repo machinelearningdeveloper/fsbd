@@ -40,6 +40,15 @@ def get_title(book, title_column):
 def get_url(book, url_column):
     return get_value(book, url_column)
 
+def get_page(url):
+    res = None
+    retries = 0
+    while (not res or res.status_code != 200) and retries < 3:
+        res = requests.get(url)
+    if not res or res.status_code != 200:
+        raise ValueError(f'unable to download content at url: {url}')
+    return res.content
+
 def normalize(txt):
     return re.sub(
         r'[^a-z0-9.]+',
@@ -61,4 +70,6 @@ mkdir(downloads_base_dir, normalize(subject))
 title = get_title(book, book_title_column)
 
 book_url = get_url(book, book_url_column)
-print(book_url)
+
+page = get_page(book_url)
+print(page)

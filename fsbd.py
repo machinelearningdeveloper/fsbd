@@ -1,5 +1,8 @@
 from configparser import ConfigParser
 from io import BytesIO
+import os
+import os.path
+import re
 
 import pandas as pd
 import requests
@@ -25,6 +28,20 @@ df.to_excel(book_list_path)
 def get_subject(book, subject_column):
     return book[subject_column].values[0]
 
+def normalize(txt):
+    return re.sub(
+        r'[^a-z0-9.]+',
+        '_',
+        txt.replace("'", ''),
+        flags=re.IGNORECASE).strip('_').lower()
+
+def mkdir(basedir, subdir):
+    try:
+        path = os.path.join(basedir, subdir)
+        os.mkdir(path)
+    except FileExistsError:
+        pass
+
 book = df[df[book_url_column] == example_book_url]
-book_subject = get_subject(book, book_subject_column)
-print(book_subject)
+subject = get_subject(book, book_subject_column)
+mkdir(downloads_base_dir, normalize(subject))

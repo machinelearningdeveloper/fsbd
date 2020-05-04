@@ -3,7 +3,9 @@ from io import BytesIO
 import os
 import os.path
 import re
+from urllib.parse import urlparse, urlunparse
 
+from bs4 import BeautifulSoup
 import pandas as pd
 import requests
 
@@ -47,7 +49,7 @@ def get_page(url):
         res = requests.get(url)
     if not res or res.status_code != 200:
         raise ValueError(f'unable to download content at url: {url}')
-    return res.content
+    return res.content.decode()
 
 def normalize(txt):
     return re.sub(
@@ -71,5 +73,16 @@ title = get_title(book, book_title_column)
 
 book_url = get_url(book, book_url_column)
 
+res = requests.get(book_url)
+book_url_parsed = urlparse(res.url)
 page = get_page(book_url)
-print(page)
+soup = BeautifulSoup(page, 'html.parser')
+pdf_url_rel = soup.find('a', class_='test-bookpdf-link')['href']
+pdf_url_abs = urlunparse(
+    (book_url_parsed.scheme,
+    book_url_parsed.netloc,
+    pdf_url_rel,
+    book_url_parsed.params,
+    book_url_parsed.query,
+    book_url_parsed.fragment))
+print(pdf_url_abs)

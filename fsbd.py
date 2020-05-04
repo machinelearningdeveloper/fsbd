@@ -11,6 +11,7 @@ list_url = config['urls']['list_url']
 example_book_url = config['urls']['example_book_url']
 book_url_column = config['columns']['book_url_column']
 book_list_path = config['paths']['book_list_path']
+downloads_base_dir = config['paths']['downloads_base_dir']
 
 res = requests.get(list_url)
 

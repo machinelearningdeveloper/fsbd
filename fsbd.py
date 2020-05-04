@@ -16,6 +16,7 @@ book_url_column = config['columns']['book_url_column']
 book_list_path = config['paths']['book_list_path']
 downloads_base_dir = config['paths']['downloads_base_dir']
 book_subject_column = config['columns']['book_subject_column']
+book_title_column = config['columns']['book_title_column']
 
 res = requests.get(list_url)
 
@@ -27,6 +28,9 @@ df.to_excel(book_list_path)
 
 def get_subject(book, subject_column):
     return book[subject_column].values[0]
+
+def get_title(book, title_column):
+    return book[title_column].values[0]
 
 def normalize(txt):
     return re.sub(
@@ -45,3 +49,6 @@ def mkdir(basedir, subdir):
 book = df[df[book_url_column] == example_book_url]
 subject = get_subject(book, book_subject_column)
 mkdir(downloads_base_dir, normalize(subject))
+
+title = get_title(book, book_title_column)
+print(title)

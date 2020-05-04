@@ -85,4 +85,4 @@ pdf_url_abs = urlunparse(
     book_url_parsed.params,
     book_url_parsed.query,
     book_url_parsed.fragment))
-print(pdf_url_abs)
+pdf = requests.get(pdf_url_abs)
